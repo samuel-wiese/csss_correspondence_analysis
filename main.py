@@ -3,7 +3,7 @@ from plotting import draw_binary_matrix, plot_node_degrees, plot_metric_by_us_st
 from complexity import count, compute_eci, compute_fitness
 
 
-geo_groups = ["United States of America"]
+geo_groups = ["United-States-of-America"]
 tax_groups = []
 
 # Take the network

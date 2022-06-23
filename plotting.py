@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 import plotly.express as px
-import plotly.graph_objs as go
 import csv
 
 import matplotlib.pyplot as plt
