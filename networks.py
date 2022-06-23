@@ -1,8 +1,10 @@
 import numpy as np
-import networkx as nx
 import pickle as pkl
 import os
 import csv
+
+import networkx as nx
+from networkx.algorithms import bipartite
 
 from typing import List, Dict, Tuple
 
@@ -115,3 +117,26 @@ def create_region_species_network(groups: List[str], taxonomic_groups: List[str]
 
 	# Return it all
 	return network, matrix, matrix_sorted, regions, regions_sorted, species, species_sorted, taxonomic_map, filename
+
+
+def take_monopartite_projections(network: nx.Graph) -> Tuple[nx.Graph, nx.Graph]:
+	"""
+	Take monopartite projection of the complete bipartite region-species network.
+
+	Parameters
+	----------
+	network : nx.Graph
+		The region-species network.
+
+	Returns
+	-------
+	network_species, network_regions : Tuple[nx.Graph, nx.Graph]
+		Weighted monopartite projections.
+	"""
+
+	species = [x for x, y in network.nodes(data=True) if y["type"] == "spicy"]
+	regions = [x for x, y in network.nodes(data=True) if y["type"] == "region"]
+	network_species = bipartite.weighted_projected_graph(network, species, ratio=True)
+	network_regions = bipartite.weighted_projected_graph(network, regions, ratio=True)
+
+	return network_species, network_regions

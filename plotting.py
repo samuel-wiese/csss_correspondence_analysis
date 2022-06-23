@@ -145,3 +145,22 @@ def plot_metric_by_us_state(metric: np.ndarray, regions: List[str], desc: str, m
 	fig.update_layout(margin=dict(l=0, r=0, b=0, t=0), autosize=True)
 	fig.update_coloraxes(showscale=False)
 	fig.write_image("img/map_usa_" + metric_desc_short + "_" + desc[desc.index("_") + 1:] + ".pdf")
+
+
+# TODO: someone needs to finish this
+def plot_clusters(network: nx.Graph, label: str, desc: str) -> None:
+	"""
+	Plots clusters for species and for regions to understand their similarity.
+
+	Parameters
+	----------
+	network : nx.Graph
+		A monopartite graph with edge weights.
+	label : str
+		Whether we're plotting species or regions.
+	desc : str
+		Description of current settings.
+	"""
+
+	network = nx.drawing.nx_agraph.to_agraph(network)
+	network.draw('test.png', format='png', prog='neato')
