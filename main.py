@@ -4,7 +4,8 @@ from plotting import draw_binary_matrix, plot_node_degrees, plot_metric_by_us_st
 from complexity import count, compute_eci, compute_fitness
 
 
-geo_groups = ["United-States-of-America"]
+geo_groups = ["Europe"]
+# geo_groups = ["United-States-of-America"]
 tax_groups = []
 
 # Take the network and project it
@@ -16,11 +17,24 @@ network_species, network_regions = take_monopartite_projections(network)
 draw_binary_matrix(matrix_sorted, desc)
 plot_node_degrees(network, desc)
 
-# Compute metrics and draw them nicely
+# Compute metrics
 cou_s, cou_r = count(matrix)
 eci_s, eci_r = compute_eci(matrix, regions, species)
 fit_s, fit_r = compute_fitness(matrix, regions, species)
+
+# Print some info
 print_metric_by_species(cou_s, eci_s, fit_s, species, taxonomic_map)
+
+print(regions)
+print(species)
+print(list(cou_r))
+print(list(eci_r))
+print(list(fit_r))
+
+exit()
+
+
+
 plot_metric_by_us_state(cou_r, regions, desc, "Total Number of Species", "count")
 plot_metric_by_us_state(eci_r, regions, desc, "ECI-Accomodatingness", "eci")
 plot_metric_by_us_state(fit_r, regions, desc, "FC-Accomodatingness", "fc")
