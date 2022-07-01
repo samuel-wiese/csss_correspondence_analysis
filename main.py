@@ -1,3 +1,5 @@
+import numpy as np
+
 from networks import create_region_species_network, take_monopartite_projections
 from plotting import draw_binary_matrix, plot_node_degrees, plot_metric_by_us_state, print_metric_by_species,\
 	plot_clusters

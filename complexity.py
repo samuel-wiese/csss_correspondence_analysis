@@ -60,9 +60,9 @@ def compute_eci(matrix: np.ndarray, regions: List[str], species: List[str]) -> T
 	r_v = (r_v - np.mean(r_v)) / np.std(r_v)
 
 	# Fix signs
-	if r_v[regions.index("Florida")] < 0:
+	if "Florida" in regions and r_v[regions.index("Florida")] < 0:
 		r_v = -r_v
-	if s_v[species.index("Egretta")] > 0:
+	if "Egretta" in regions and s_v[species.index("Egretta")] > 0:
 		s_v = -s_v
 
 	return s_v, r_v
@@ -108,9 +108,9 @@ def compute_fitness(matrix: np.ndarray, regions: List[str], species: List[str], 
 	pickyness = (pickyness - np.mean(pickyness)) / np.std(pickyness)
 
 	# Fix signs
-	if accomodatingness[regions.index("Florida")] < 0:
+	if "Florida" in regions and accomodatingness[regions.index("Florida")] < 0:
 		accomodatingness = -accomodatingness
-	if pickyness[species.index("Egretta")] > 0:
+	if "Egretta" in regions and pickyness[species.index("Egretta")] > 0:
 		pickyness = -pickyness
 
 	return pickyness, accomodatingness

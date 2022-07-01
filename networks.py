@@ -59,8 +59,9 @@ def create_region_species_network(groups: List[str], taxonomic_groups: List[str]
 		regions = ["#" + r[0:-4] for r in regions]
 
 		# Removing Hawaii and Alaska from our analysis
-		regions.remove("#Hawaii")
-		regions.remove("#Alaska")
+		if group == 'United-States-of-America':
+			regions.remove("#Hawaii")
+			regions.remove("#Alaska")
 
 		all_regions.extend(regions)
 		for region in regions:
