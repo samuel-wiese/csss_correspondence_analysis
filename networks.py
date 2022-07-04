@@ -3,6 +3,7 @@ import pickle as pkl
 import os
 import csv
 
+import pandas as pd
 import networkx as nx
 from networkx.algorithms import bipartite
 
@@ -47,7 +48,7 @@ def create_region_species_network(groups: List[str], taxonomic_groups: List[str]
 		matrix, matrix_sorted, regions, regions_sorted, species, species_sorted, taxonomic_map\
 			= pkl.load(open(matrix_filename, "rb"))
 		return network, matrix, matrix_sorted, regions, regions_sorted, species, species_sorted, taxonomic_map,\
-			   filename
+			filename
 
 	# Read MOL data
 	edges = []
@@ -140,3 +141,46 @@ def take_monopartite_projections(network: nx.Graph) -> Tuple[nx.Graph, nx.Graph]
 	network_regions = bipartite.weighted_projected_graph(network, regions, ratio=True)
 
 	return network_species, network_regions
+
+def construct_product_space_analogue(network: nx.Graph) -> Tuple[np.array, list, nx.Graph]:
+	"""
+	Construct relatedness network (analoguous to the product space) from the complete bipartite region-species network.
+
+	Parameters
+	----------
+	network : nx.Graph
+		The region-species network.
+
+	Returns
+	-------
+	network_species_adjacency, network_species_nodelist, network_species_graph : Tuple[np.array, list, nx.Graph]
+		product space for species
+	"""
+
+	species = [x for x, y in network.nodes(data=True) if y["type"] == "spicy"]
+	regions = [x for x, y in network.nodes(data=True) if y["type"] == "region"]
+
+	M = nx.bipartite.biadjacency_matrix(network, regions, species)
+	phipp = M.T.dot(M) / M.sum(0)
+	phipp = np.minimum(phipp, phipp.T)
+	phipp = np.nan_to_num(phipp)
+
+	phipp_df = pd.DataFrame(phipp, index=species, columns=species)
+	network_species = nx.from_pandas_adjacency(phipp_df)
+
+	return phipp, species, network_species
+
+def MST_plus_links_gt_cutoff(G, cutoff=0.9):
+	"""
+	Filter network to Maximum Spanning Tree and all links larger than a cutoff.
+
+	:param G: nx.Graph Graph that should be filtered
+	:param cutoff:  str, link cutoff, set to 1 for MST, 0 for full graph
+	:return: nx.Graph
+	"""
+	MST = nx.maximum_spanning_tree(G)
+
+	for edge in G.edges(data=True):
+		if edge[2]['weight'] > cutoff:
+			MST.add_edge(edge[0],edge[1],weight=edge[2]['weight'])
+	return MST
